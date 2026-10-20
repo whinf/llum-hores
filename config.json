@@ -1,0 +1,15 @@
+{
+ "site_name": "Hora Verda",
+ "site_url": "http://localhost:8000",
+ "repo_url": "",
+ "donate_url": "",
+ "owner": {"name": "", "nif": "", "email": ""},
+ "appliances": [
+  {"id": "washer", "hours": 2, "kwh": 1.0},
+  {"id": "dishwasher", "hours": 2, "kwh": 1.1},
+  {"id": "oven", "hours": 1, "kwh": 1.2},
+  {"id": "dryer", "hours": 2, "kwh": 2.5},
+  {"id": "heater", "hours": 3, "kwh": 4.5},
+  {"id": "ev", "hours": 4, "kwh": 15}
+ ]
+}

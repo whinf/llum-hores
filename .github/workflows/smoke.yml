@@ -1,0 +1,30 @@
+name: Probar acceso a REE
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Llamar a las APIs de REE desde GitHub
+        run: |
+          set -u
+          D=$(TZ=Europe/Madrid date +%F)
+          UA="Mozilla/5.0 (compatible; llum-hores/1.0)"
+          ok=0
+          for url in \
+            "https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=${D}T00:00&end_date=${D}T23:59&time_trunc=hour" \
+            "https://apidatos.ree.es/es/datos/generacion/estructura-generacion?start_date=${D}T00:00&end_date=${D}T23:59&time_trunc=day" \
+            "https://api.esios.ree.es/archives/70/download_json?locale=es&date=${D}"; do
+            code=$(curl -s -o body.json -w "%{http_code}" -A "$UA" "$url")
+            echo "$code  $url"
+            head -c 200 body.json; echo
+            [ "$code" = "200" ] && grep -q '"' body.json && ok=$((ok+1))
+          done
+          echo "Respuestas correctas: $ok de 3"
+          [ "$ok" -ge 2 ]
