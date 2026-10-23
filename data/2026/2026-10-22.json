@@ -99,20 +99,21 @@
   }
  ],
  "mix": {
-  "co2_g_kwh": 118,
-  "renewable_pct": 52.0,
+  "co2_g_kwh": 132,
+  "renewable_pct": 48.5,
   "sources": {
-   "coal": 0.9,
-   "cogeneration": 5.9,
-   "gas": 24.4,
-   "hydro": 8.1,
-   "other_fossil": 3.8,
-   "other_renewable": 0.3,
-   "solar": 33.3,
-   "wind": 23.4
+   "coal": 0.7,
+   "cogeneration": 4.6,
+   "gas": 22.4,
+   "hydro": 6.4,
+   "nuclear": 20.8,
+   "other_fossil": 2.9,
+   "other_renewable": 1.7,
+   "solar": 24.8,
+   "wind": 15.7
   }
  },
- "mix_fetched": "2026-10-23T02:34:02+02:00",
+ "mix_fetched": "2026-10-23T13:50:31+02:00",
  "prices_fetched": "2026-10-21T23:56:06+02:00",
  "prices_source": "apidatos"
 }
