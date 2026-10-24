@@ -108,6 +108,7 @@ class Site:
         updated = self.records[self.days[-1]].get("prices_fetched") if self.days else None
         links = " · ".join(f'<a href="{self.href(self.path(lang, k))}">{t(lang, k)}</a>'
                            for k in ("about", "legal", "privacy"))
+        links += f' · <a href="https://onestudioman.horaverda.es/{lang}/">{t(lang, "studio")}</a>'
         return f"""{head}
 <body>
 <a class="skip" href="#main">{t(lang, "skip")}</a>
