@@ -102,6 +102,9 @@ class Site:
             f'{" aria-current=\"true\"" if lg == lang else ""}>{t(lg, "lang_name")}</a>' for lg in LANGS)
         donate = (f'<a class="donate" href="{esc(self.cfg["donate_url"])}" rel="noopener">{t(lang, "donate")}</a>'
                   if self.cfg.get("donate_url") else "")
+        sister_url = self.cfg.get("sister_url")
+        sister = (f'<a class="sister" href="{esc(sister_url.rstrip("/"))}/{lang}/">📍 {t(lang, "sister")}</a>'
+                  if sister_url else "")
         updated = self.records[self.days[-1]].get("prices_fetched") if self.days else None
         links = " · ".join(f'<a href="{self.href(self.path(lang, k))}">{t(lang, k)}</a>'
                            for k in ("about", "legal", "privacy"))
@@ -111,12 +114,13 @@ class Site:
 <header class="top"><div class="wrap">
 <a class="brand" href="{self.href(self.path(lang, 'home'))}"><img src="{self.href('/static/favicon.svg')}" alt="" width="28" height="28"> {esc(self.name)}</a>
 <nav class="langs" aria-label="{t(lang, 'language')}">{switch}</nav>
-</div></header>
+</div>{f'<div class="wrap sister-bar">{sister}</div>' if sister else ""}</header>
 <main id="main" class="wrap">
 {body}
 </main>
 <footer class="foot"><div class="wrap">
 <p>{t(lang, "source_line", t=fmt_dt(updated))}</p>
+{f"<p>{sister}</p>" if sister else ""}
 <p>{links} · <a href="{self.href(self.path(lang, 'archive'))}">{t(lang, "archive_title")}</a> · <a href="{self.href('/api/v1/latest.json')}">{t(lang, "api")}</a> · <a href="{self.href(self.path(lang, 'feed'))}">{t(lang, "feed")}</a> {donate}</p>
 </div></footer>
 </body>

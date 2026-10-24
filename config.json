@@ -3,6 +3,7 @@
  "site_url": "http://localhost:8000",
  "repo_url": "",
  "donate_url": "",
+ "sister_url": "https://cerdanyola.horaverda.es",
  "owner": {"name": "", "nif": "", "email": ""},
  "appliances": [
   {"id": "washer", "hours": 2, "kwh": 1.0},
