@@ -100,7 +100,8 @@ class Site:
         switch = " · ".join(
             f'<a href="{self.href(self.path(lg, kind, d))}" hreflang="{lg}" lang="{lg}"'
             f'{" aria-current=\"true\"" if lg == lang else ""}>{t(lg, "lang_name")}</a>' for lg in LANGS)
-        donate = (f'<a class="donate" href="{esc(self.cfg["donate_url"])}" rel="noopener">{t(lang, "donate")}</a>'
+        donate = (f'<p class="support"><a class="donate" href="{esc(self.cfg["donate_url"])}" rel="noopener">'
+                  f'<span aria-hidden="true">♥</span> {t(lang, "donate")}</a></p>'
                   if self.cfg.get("donate_url") else "")
         sister_url = self.cfg.get("sister_url")
         sister = (f'<a class="sister" href="{esc(sister_url.rstrip("/"))}/{lang}/">📍 {t(lang, "sister")}</a>'
@@ -122,7 +123,8 @@ class Site:
 <footer class="foot"><div class="wrap">
 <p>{t(lang, "source_line", t=fmt_dt(updated))}</p>
 {f"<p>{sister}</p>" if sister else ""}
-<p>{links} · <a href="{self.href(self.path(lang, 'archive'))}">{t(lang, "archive_title")}</a> · <a href="{self.href('/api/v1/latest.json')}">{t(lang, "api")}</a> · <a href="{self.href(self.path(lang, 'feed'))}">{t(lang, "feed")}</a> {donate}</p>
+<p>{links} · <a href="{self.href(self.path(lang, 'archive'))}">{t(lang, "archive_title")}</a> · <a href="{self.href('/api/v1/latest.json')}">{t(lang, "api")}</a> · <a href="{self.href(self.path(lang, 'feed'))}">{t(lang, "feed")}</a></p>
+{donate}
 </div></footer>
 </body>
 </html>
