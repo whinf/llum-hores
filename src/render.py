@@ -7,6 +7,7 @@ from pathlib import Path
 from urllib.parse import urlparse
 
 import i18n
+import icons
 import svg
 import tz
 import windows
@@ -14,6 +15,11 @@ from i18n import LANGS, t
 
 ROOT = Path(__file__).resolve().parent.parent
 WINDOW = 3  # horas de la franja destacada
+# Aplica el tema guardado antes de pintar (evita el parpadeo); sin JS rige el tema del sistema.
+THEME_SCRIPT = ('<script>(function(){try{var t=localStorage.getItem("theme");'
+                'if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}})()</script>')
+THEME_COLOR = ('<meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">\n'
+               '<meta name="theme-color" content="#1c1c1a" media="(prefers-color-scheme: dark)">')
 
 
 def fmt_dt(iso):
@@ -34,6 +40,10 @@ class Site:
         self.prefix = urlparse(self.base_url).path.rstrip("/")
         self.name = cfg["site_name"]
         self.days = sorted(self.records)
+        self.icons = set()  # iconos usados en la página en curso (para el sprite)
+
+    def i(self, name, label=None, cls="i"):
+        return icons.icon(self.icons, name, label, cls)
 
     # ---------- URLs ----------
     def path(self, lang, kind, d=None):
@@ -76,7 +86,7 @@ class Site:
 <html lang="{lang}">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(desc)}">
 {'<meta name="robots" content="noindex">' if noindex else ''}
@@ -88,42 +98,65 @@ class Site:
 <meta property="og:url" content="{self.absolute(here)}">
 <meta property="og:locale" content="{t(lang, 'locale')}">
 <meta property="og:site_name" content="{esc(self.name)}">
-<meta name="theme-color" content="#0b6b3a">
+<meta property="og:image" content="{self.absolute('/static/og.png')}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+{THEME_COLOR}
 <link rel="icon" href="{self.href('/static/favicon.svg')}" type="image/svg+xml">
+<link rel="apple-touch-icon" href="{self.href('/static/apple-touch-icon.png')}">
+<link rel="manifest" href="{self.href('/static/manifest.webmanifest')}">
+<link rel="preload" href="{self.href('/static/fonts/inter-latin.var.woff2')}" as="font" type="font/woff2" crossorigin>
+{THEME_SCRIPT}
 <link rel="stylesheet" href="{self.href('/static/style.css')}">
 <link rel="alternate" type="application/rss+xml" title="{esc(t(lang, 'feed_title'))}" href="{self.href(self.path(lang, 'feed'))}">
 {ld}
 <script src="{self.href('/static/now.js')}" defer></script>
+<script src="{self.href('/static/ui.js')}" defer></script>
 </head>"""
         if bare:
+            self.icons.clear()
             return f'{head}\n<body class="widget">{body}</body>\n</html>\n'
-        switch = " · ".join(
+        switch = "".join(
             f'<a href="{self.href(self.path(lg, kind, d))}" hreflang="{lg}" lang="{lg}"'
-            f'{" aria-current=\"true\"" if lg == lang else ""}>{t(lg, "lang_name")}</a>' for lg in LANGS)
+            f'{" aria-current=\"true\"" if lg == lang else ""}><span class="lg-long">{t(lg, "lang_name")}</span>'
+            f'<span class="lg-short" aria-hidden="true">{lg}</span></a>' for lg in LANGS)
+        theme = (f'<span class="theme-slot"><button class="theme" type="button" hidden data-theme-toggle '
+                 f'data-auto="{esc(t(lang, "theme_auto"))}" data-light="{esc(t(lang, "theme_light"))}" '
+                 f'data-dark="{esc(t(lang, "theme_dark"))}" aria-label="{esc(t(lang, "theme_auto"))}">'
+                 f'{self.i("monitor", cls="i i-auto")}{self.i("sun", cls="i i-light")}{self.i("moon", cls="i i-dark")}'
+                 f'</button></span>')
         donate = (f'<p class="support"><a class="donate" href="{esc(self.cfg["donate_url"])}" rel="noopener">'
-                  f'<span aria-hidden="true">♥</span> {t(lang, "donate")}</a></p>'
+                  f'{self.i("heart")} {t(lang, "donate")}</a></p>'
                   if self.cfg.get("donate_url") else "")
         sister_url = self.cfg.get("sister_url")
-        sister = (f'<a class="sister" href="{esc(sister_url.rstrip("/"))}/{lang}/">📍 {t(lang, "sister")}</a>'
+        sister = (f'<a class="sister" href="{esc(sister_url.rstrip("/"))}/{lang}/">{self.i("map-pin")} {t(lang, "sister")}</a>'
                   if sister_url else "")
         updated = self.records[self.days[-1]].get("prices_fetched") if self.days else None
-        links = " · ".join(f'<a href="{self.href(self.path(lang, k))}">{t(lang, k)}</a>'
-                           for k in ("about", "legal", "privacy"))
-        links += f' · <a href="https://onestudioman.horaverda.es/{lang}/">{t(lang, "studio")}</a>'
+        links = [f'<li><a href="{self.href(self.path(lang, k))}">{t(lang, k)}</a></li>' for k in ("about", "legal", "privacy")]
+        links += [f'<li><a href="https://onestudioman.horaverda.es/{lang}/">{t(lang, "studio")}</a></li>',
+                  f'<li><a href="{self.href(self.path(lang, "archive"))}">{t(lang, "archive_title")}</a></li>',
+                  f'<li><a href="{self.href("/api/v1/latest.json")}">{t(lang, "api")}</a></li>',
+                  f'<li><a href="{self.href(self.path(lang, "feed"))}">{t(lang, "feed")}</a></li>']
+        sprite = icons.sprite(self.icons)
+        self.icons.clear()
         return f"""{head}
 <body>
+{sprite}
 <a class="skip" href="#main">{t(lang, "skip")}</a>
 <header class="top"><div class="wrap">
 <a class="brand" href="{self.href(self.path(lang, 'home'))}"><img src="{self.href('/static/favicon.svg')}" alt="" width="28" height="28"> {esc(self.name)}</a>
 <nav class="langs" aria-label="{t(lang, 'language')}">{switch}</nav>
-</div>{f'<div class="wrap sister-bar">{sister}</div>' if sister else ""}</header>
+{theme}
+</div></header>
+{f'<div class="wrap promo">{sister}</div>' if sister else ""}
 <main id="main" class="wrap">
 {body}
 </main>
 <footer class="foot"><div class="wrap">
 <p>{t(lang, "source_line", t=fmt_dt(updated))}</p>
 {f"<p>{sister}</p>" if sister else ""}
-<p>{links} · <a href="{self.href(self.path(lang, 'archive'))}">{t(lang, "archive_title")}</a> · <a href="{self.href('/api/v1/latest.json')}">{t(lang, "api")}</a> · <a href="{self.href(self.path(lang, 'feed'))}">{t(lang, "feed")}</a></p>
+<ul class="foot-links">{"".join(links)}</ul>
 {donate}
 </div></footer>
 </body>
@@ -171,12 +204,34 @@ class Site:
         for h, label, tier in zip(hours, labels, tiers):
             s = int(tz.parse_iso(h["t"]).timestamp() * 1000)
             price = i18n.fmt_price(lang, h["p"])
-            rows.append(f'<tr data-s="{s}" data-p="{price}" data-l="{esc(label)} · {t(lang, f"tier_{tier}")}">'
+            rows.append(f'<tr data-s="{s}" data-p="{price}" data-t="{tier}" data-l="{esc(label)} · {t(lang, f"tier_{tier}")}">'
                         f'<td>{label}</td><td class="num">{price}</td>'
                         f'<td><span class="tier t{tier}">{t(lang, f"tier_{tier}")}</span></td></tr>')
         return (f'<details class="table"><summary>{t(lang, "table_show")}</summary><table>'
                 f'<thead><tr><th>{t(lang, "table_hour")}</th><th class="num">{t(lang, "table_price")}</th>'
                 f'<th>{t(lang, "table_level")}</th></tr></thead><tbody>{"".join(rows)}</tbody></table></details>')
+
+    def window_item(self, lang, d, label):
+        """Franja de WINDOW horas más barata del día `d`, con marcas de tiempo para now.js."""
+        best = windows.cheapest(self.prices(d), WINDOW)
+        if not best:
+            return ""
+        hours = self.records[d]["hours"]
+        labels = svg.hour_labels(hours)
+        start, end = labels[best[0]].split("–")[0], labels[best[0] + WINDOW - 1].split("–")[1]
+        s = int(tz.parse_iso(hours[best[0]]["t"]).timestamp() * 1000)
+        e = int(tz.parse_iso(hours[best[0] + WINDOW - 1]["t"]).timestamp() * 1000) + 3_600_000
+        return (f'<li data-s="{s}" data-e="{e}">{self.i("zap")}<span class="k">{esc(label)}</span> '
+                f'<strong>{start}–{end}</strong> <span class="muted">{i18n.fmt_price(lang, best[1])} {t(lang, "unit")}</span></li>')
+
+    def hero(self, lang, shown, tomorrow):
+        today = self.now.date()
+        items = self.window_item(lang, shown, t(lang, "today") if shown == today else i18n.fmt_date(lang, shown, weekday=False))
+        if tomorrow in self.records:
+            items += self.window_item(lang, tomorrow, t(lang, "tomorrow"))
+        return (f'<section class="hero-now card"><p class="now" data-now hidden><span class="k">{t(lang, "now")}</span> '
+                f'<strong class="v"></strong> <span class="u">{t(lang, "unit")}</span> <span class="l"></span></p>'
+                f'<p class="wt">{t(lang, "windows_title")}</p><ul class="windows">{items}</ul></section>')
 
     def day_block(self, lang, d, uid):
         prices = self.prices(d)
@@ -238,24 +293,23 @@ class Site:
         body = [f'<h1>{t(lang, "home_title")}</h1><p class="lede">{t(lang, "tagline")}</p>']
         if shown:
             label = t(lang, "today") if shown == today else ""
-            body.append(f'<p class="nowbox" data-now hidden><span class="k">{t(lang, "now")}</span> '
-                        f'<span class="v"></span> {t(lang, "unit")} <span class="l"></span></p>')
+            body.append(self.hero(lang, shown, tomorrow))
             body.append(f'<section><h2>{label + " · " if label else ""}{i18n.fmt_date(lang, shown)}</h2>'
                         f'{self.day_block(lang, shown, "today")}'
-                        f'<p><a href="{self.href(self.path(lang, "day", shown))}">{t(lang, "see_day")} →</a></p></section>')
+                        f'<p><a class="more" href="{self.href(self.path(lang, "day", shown))}">{t(lang, "see_day")} →</a></p></section>')
         body.append(f'<section><h2>{t(lang, "tomorrow")} · {i18n.fmt_date(lang, tomorrow)}</h2>')
         if tomorrow in self.records:
             body.append(self.day_block(lang, tomorrow, "tomorrow"))
         else:
             body.append(f'<p class="pending">{t(lang, "tomorrow_pending")}</p>')
         body.append("</section>")
-        body.append(f'<aside class="tip">🌱 {t(lang, "green_tip")}</aside>')
+        body.append(f'<aside class="tip">{self.i("sprout")}<p>{t(lang, "green_tip")}</p></aside>')
         mix_days = [d for d in self.mixes if d <= today]
         if mix_days:
             body.append(self.mix_block(lang, max(mix_days)))
         if shown:
             body.append(f'<section><h2>{t(lang, "last_days")}</h2>{self.recent_table(lang, shown)}'
-                        f'<p><a href="{self.href(self.path(lang, "archive"))}">{t(lang, "see_archive")} →</a></p></section>')
+                        f'<p><a class="more" href="{self.href(self.path(lang, "archive"))}">{t(lang, "see_archive")} →</a></p></section>')
         body.append(f'<section class="about-pvpc"><p>{t(lang, "what_pvpc")}</p></section>')
         ld = [{"@context": "https://schema.org", "@type": "WebSite", "name": self.name,
                "url": self.absolute(self.path(lang, "home")), "inLanguage": lang,
@@ -299,7 +353,7 @@ class Site:
             nav.append(f'<a rel="next" href="{self.href(self.path(lang, "day", self.days[idx + 1]))}">{t(lang, "next_day")} →</a>')
         body = (f'{crumbs}<h1>{esc(title)}</h1>{self.day_block(lang, d, "day")}'
                 f'{"<ul class=changes>" + changes + "</ul>" if changes else ""}'
-                f'<aside class="tip">🌱 {t(lang, "green_tip")}</aside>{self.mix_block(lang, d)}'
+                f'<aside class="tip">{self.i("sprout")}<p>{t(lang, "green_tip")}</p></aside>{self.mix_block(lang, d)}'
                 f'<section class="about-pvpc"><p>{t(lang, "what_pvpc")}</p></section>'
                 f'<nav class="pager">{"".join(nav)}</nav>')
         dataset = {"@context": "https://schema.org", "@type": "Dataset", "name": title, "description": desc,
@@ -397,12 +451,14 @@ class Site:
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>{esc(self.name)} · {esc(t("es", "home_title"))}</title>
 <meta name="description" content="{esc(t('es', 'home_desc'))}">
 <link rel="canonical" href="{self.absolute('/')}">
 {alts}<link rel="alternate" hreflang="x-default" href="{self.absolute('/')}">
+{THEME_COLOR}
 <link rel="icon" href="{self.href('/static/favicon.svg')}" type="image/svg+xml">
+{THEME_SCRIPT}
 <link rel="stylesheet" href="{self.href('/static/style.css')}">
 <script>
 (function(){{var m={{ca:"ca",es:"es",gl:"es",eu:"es",en:"en"}};var l=(navigator.languages||[navigator.language||"es"]);
@@ -475,12 +531,30 @@ location.replace("{self.prefix}/es/");}})();
         return ('<?xml version="1.0" encoding="utf-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
                 'xmlns:xhtml="http://www.w3.org/1999/xhtml">' + "".join(urls) + "</urlset>\n")
 
+    def write_css(self):
+        """Un solo style.css servido = base.css (marco común) + site.css (reglas propias de esta web)."""
+        static = self.out / "static"
+        css = "\n".join((static / f).read_text("utf-8") for f in ("base.css", "site.css"))
+        (static / "style.css").write_text(css, "utf-8")
+        for f in ("base.css", "site.css"):
+            (static / f).unlink()
+
+    def manifest(self):
+        return {"name": self.name, "short_name": self.name, "lang": LANGS[0],
+                "start_url": self.href(self.path(LANGS[0], "home")), "scope": self.href("/"),
+                "display": "minimal-ui", "background_color": "#f9f9f7", "theme_color": "#0b6b3a",
+                "icons": [{"src": self.href("/static/icon-192.png"), "sizes": "192x192", "type": "image/png"},
+                          {"src": self.href("/static/icon-512.png"), "sizes": "512x512", "type": "image/png",
+                           "purpose": "any maskable"}]}
+
     # ---------- todo ----------
     def build(self):
         if self.out.exists():
             shutil.rmtree(self.out)
         self.out.mkdir(parents=True)
         shutil.copytree(ROOT / "static", self.out / "static")
+        self.write_css()
+        self.write("/static/manifest.webmanifest", json.dumps(self.manifest(), ensure_ascii=False))
         today = self.now.date().isoformat()
         entries = [("home", None, today), ("archive", None, today)]
         for lang in LANGS:

@@ -1,0 +1,90 @@
+/* site.css — reglas propias de Hora Verda (precio de la luz). Se concatena tras base.css. */
+@layer site {
+  /* Recuadro «Ahora» + franjas más baratas */
+  .hero-now { padding: var(--s-4) var(--s-5); margin-block: var(--s-4) var(--s-5); display: grid; gap: var(--s-3); }
+  .hero-now .now { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35em; margin: 0; }
+  .hero-now .now .k { font-weight: 600; color: var(--accent); text-transform: uppercase; font-size: .78rem; letter-spacing: .06em; }
+  .hero-now .now .v { font-size: var(--fs-4); font-weight: 700; letter-spacing: -.03em; line-height: 1; font-variant-numeric: tabular-nums; }
+  .hero-now .now .u { color: var(--muted); font-size: var(--fs-s); }
+  .hero-now .now .l { color: var(--ink-2); font-size: var(--fs-s); flex-basis: 100%; display: flex; gap: .4em; align-items: center; }
+  .hero-now .wt { margin: 0; color: var(--ink-2); font-size: var(--fs-s); font-weight: 600; }
+  .windows { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--s-2); }
+  .windows li { display: flex; flex-wrap: wrap; align-items: center; gap: .4em .6em; padding: .5rem .75rem; border-radius: var(--r-s); background: var(--surface-2); font-variant-numeric: tabular-nums; transition: background var(--dur) var(--ease); }
+  .windows .i { color: var(--good-ink); }
+  .windows .k { color: var(--ink-2); min-inline-size: 4.5em; }
+  .windows strong { font-size: var(--fs-1); }
+  .windows li.live { background: var(--tint-good); box-shadow: inset 3px 0 0 var(--good); }
+  .windows li.past { opacity: .6; }
+  .windows li.past strong { text-decoration: line-through; text-decoration-thickness: 1px; }
+
+  /* Gráfico de barras por horas */
+  .fig { margin: var(--s-2) 0; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-m); box-shadow: var(--shadow-1); padding: 8px 6px 2px; container-type: inline-size; }
+  .chart { display: block; inline-size: 100%; block-size: auto; font-size: 12px; font-variant-numeric: tabular-nums; }
+  .chart .grid { stroke: var(--grid); stroke-width: 1; }
+  .chart .axis { stroke: var(--axis); stroke-width: 1; }
+  .chart .tick { fill: var(--muted); }
+  .chart .day { fill: var(--accent); }
+  .chart .bar .fill { fill: var(--bar-mid); transition: opacity var(--dur) var(--ease); }
+  .chart .bar[data-tier="0"] .fill { fill: var(--good); }
+  .chart .bar[data-tier="2"] .fill { fill: var(--bad); }
+  .chart .bar.cheap .fill { fill: var(--good); stroke: var(--good-ink); stroke-width: 1; }
+  .chart .bar .hit { fill: transparent; }
+  .chart .bar .tip { fill: var(--ink); font-weight: 600; opacity: 0; pointer-events: none; }
+  .chart .bar:hover .tip, .chart .bar:focus .tip { opacity: 1; }
+  .chart .bar:hover .fill, .chart .bar:focus .fill { opacity: .75; }
+  .chart .bar:focus { outline: none; }
+  .chart .bar.now .fill { stroke: var(--ink); stroke-width: 2; }
+  .chart .bracket { fill: none; stroke: var(--good-ink); stroke-width: 1.5; }
+  .chart .annot { fill: var(--good-ink); font-weight: 600; }
+  @container (max-width: 32rem) { .chart:not(.heat) { font-size: 22px; } }
+
+  /* Mapa de calor mensual */
+  .chart.heat rect { stroke: none; }
+  .heat .c0 { fill: var(--ramp-0); } .heat .c1 { fill: var(--ramp-1); } .heat .c2 { fill: var(--ramp-2); } .heat .c3 { fill: var(--ramp-3); }
+  .heat .c4 { fill: var(--ramp-4); } .heat .c5 { fill: var(--ramp-5); } .heat .c6 { fill: var(--ramp-6); }
+  .ramp-legend { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2); font-size: var(--fs-s); color: var(--ink-2); margin: var(--s-2) 4px; }
+  .ramp { display: inline-flex; border-radius: 3px; overflow: hidden; }
+  .ramp span { inline-size: 22px; block-size: 12px; }
+  .ramp .c0 { background: var(--ramp-0); } .ramp .c1 { background: var(--ramp-1); } .ramp .c2 { background: var(--ramp-2); } .ramp .c3 { background: var(--ramp-3); }
+  .ramp .c4 { background: var(--ramp-4); } .ramp .c5 { background: var(--ramp-5); } .ramp .c6 { background: var(--ramp-6); }
+  .fig.scroll { overflow-x: auto; overscroll-behavior-x: contain; }
+  .fig.scroll .heat { min-inline-size: 560px; }
+
+  /* Mejor hora para cada aparato */
+  .plan { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
+  .plan li { display: grid; grid-template-columns: 1fr auto; gap: 2px var(--s-3); background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-s); padding: .55rem .8rem; box-shadow: var(--shadow-1); }
+  .plan .what small { color: var(--muted); }
+  .plan .when { font-weight: 700; font-variant-numeric: tabular-nums; text-align: end; }
+  .plan .money { grid-column: 1 / -1; color: var(--ink-2); font-size: var(--fs-s); }
+  .plan .money strong { color: var(--good-ink); }
+
+  /* Tabla de precios */
+  tr.now td { background: var(--tint-good); font-weight: 700; }
+  details.table summary { font-weight: 600; }
+
+  /* Mezcla de generación */
+  .mix-legend { font-size: var(--fs-s); color: var(--ink-2); display: flex; align-items: center; gap: 6px; margin: 0 0 var(--s-2); }
+  .sw { display: inline-block; inline-size: 12px; block-size: 12px; border-radius: 3px; background: var(--good); }
+  .bars { list-style: none; padding: 0; margin: 0; display: grid; gap: var(--s-2); }
+  .bars li { display: grid; grid-template-columns: minmax(7rem, 13rem) 1fr 4.2rem; gap: var(--s-3); align-items: center; font-size: var(--fs-s); }
+  .bars .track { block-size: 10px; background: var(--grid); border-radius: var(--r-pill); overflow: hidden; }
+  .bars .track span { display: block; block-size: 100%; background: var(--axis); border-radius: var(--r-pill); }
+  .bars .ren .track span { background: var(--good); }
+  .bars .pct { text-align: end; font-variant-numeric: tabular-nums; color: var(--ink-2); }
+  @media (max-width: 32rem) { .bars li { grid-template-columns: 6.5rem 1fr 3.6rem; } }
+
+  .changes { padding-inline-start: 1.2rem; color: var(--ink-2); }
+  .months { padding-inline-start: 1.2rem; }
+  .months li { margin-block: 4px; }
+  .prose { max-inline-size: 68ch; }
+  .prose pre { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-s); padding: 10px; overflow-x: auto; font-size: .82rem; }
+  .about-pvpc { color: var(--ink-2); font-size: var(--fs-s); }
+
+  /* Widget incrustable */
+  .widget { padding: 10px; background: var(--surface); font-size: 14px; }
+  .widget .wtitle { margin: 0 0 6px; font-weight: 700; }
+  .widget .wtitle small { font-weight: 400; color: var(--muted); }
+  .widget p { margin: 6px 0 0; }
+
+  @media (forced-colors: active) { .chart .bar.cheap .fill { fill: Highlight; } }
+}

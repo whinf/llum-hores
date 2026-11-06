@@ -4,8 +4,9 @@ from math import ceil, floor
 
 import i18n
 import tz
+import windows
 
-RAMP = ["#cde2fb", "#9ec5f4", "#6da7ec", "#3987e5", "#256abf", "#184f95", "#0d366b"]
+RAMP_STEPS = 7  # escalones del mapa de calor; colores en CSS (--ramp-0 … --ramp-6)
 
 
 def _nice_step(span):
@@ -71,6 +72,7 @@ def price_bars(lang, hours, window, uid):
                    f'{i18n.fmt_num(lang, v, 2)}</text>')
         v += step
     base = y(0)
+    tiers = windows.tiers([h["p"] for h in hours])
     for i, p in enumerate(prices):
         x = left + i * slot + 1
         w = slot - 2
@@ -78,7 +80,7 @@ def price_bars(lang, hours, window, uid):
         cls = "bar cheap" if ws <= i < ws + wl else "bar"
         tip = f"{labels[i]} · {i18n.fmt_price(lang, hours[i]['p'])} €/kWh"
         out.append(
-            f'<g class="{cls}" data-s="{int(s.timestamp() * 1000)}" tabindex="0">'
+            f'<g class="{cls}" data-tier="{tiers[i]}" data-s="{int(s.timestamp() * 1000)}" tabindex="0">'
             f'<title>{escape(tip)}</title>'
             f'<rect class="hit" x="{x - 1:.1f}" y="{top}" width="{slot:.1f}" height="{ph}"/>'
             f'<path class="fill" d="{_bar_path(x, base, y(p), w)}"/>'
@@ -110,7 +112,7 @@ def heatmap(lang, days, link):
     span = (hi - lo) or 1
 
     def color(p):
-        return RAMP[min(len(RAMP) - 1, int((p - lo) / span * len(RAMP)))]
+        return f"c{min(RAMP_STEPS - 1, int((p - lo) / span * RAMP_STEPS))}"
 
     out = [f'<svg class="chart heat" viewBox="0 0 {W} {H}" role="img" aria-label="'
            f'{escape(i18n.t(lang, "heatmap_desc"))}">']
@@ -128,9 +130,9 @@ def heatmap(lang, days, link):
             p = sum(ps) / len(ps)
             tip = f"{d.day}/{d.month} {hour:02d}:00 · {i18n.fmt_price(lang, p)} €/kWh"
             out.append(f'<rect x="{left + hour * cell_w + 1}" y="{yy + 1}" width="{cell_w - 2}" '
-                       f'height="{cell_h - 2}" rx="2" fill="{color(p)}"><title>{escape(tip)}</title></rect>')
+                       f'height="{cell_h - 2}" rx="2" class="{color(p)}"><title>{escape(tip)}</title></rect>')
     out.append("</svg>")
-    legend = "".join(f'<span style="background:{c}"></span>' for c in RAMP)
+    legend = "".join(f'<span class="c{i}"></span>' for i in range(RAMP_STEPS))
     return (f'{"".join(out)}<p class="ramp-legend"><span class="lbl">'
             f'{i18n.fmt_price(lang, lo)} · {escape(i18n.t(lang, "heatmap_low"))}</span>'
             f'<span class="ramp">{legend}</span><span class="lbl">'

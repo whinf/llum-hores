@@ -107,6 +107,8 @@ STRINGS = {
         "sister": "¿Vives en Cerdanyola? Cerdanyola Avui: tiempo, agenda y trenes",
         "donate": "Apoya el proyecto",
         "skip": "Saltar al contenido",
+        "theme_auto": "Tema: automático", "theme_light": "Tema: claro", "theme_dark": "Tema: oscuro",
+        "windows_title": "Franjas más baratas",
         "language": "Idioma",
         "notfound_title": "Página no encontrada",
         "notfound_text": "Esta página no existe. Vuelve al precio de la luz de hoy.",
@@ -143,6 +145,7 @@ STRINGS = {
 """,
         "privacy_body": """
 <p>Esta web no usa cookies, no tiene analítica ni publicidad y no recoge datos personales.</p>
+<p>Si eliges el tema claro u oscuro, la preferencia se guarda solo en tu navegador (localStorage) y no se envía a ningún sitio.</p>
 <p>Está alojada en GitHub Pages. Como cualquier servidor web, GitHub registra la dirección IP de las visitas por motivos de seguridad. Más información en la <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement">declaración de privacidad de GitHub</a>.</p>
 <p>Si contactas a través de GitHub, se aplican las condiciones de esa plataforma.</p>
 """,
@@ -238,6 +241,8 @@ STRINGS = {
         "sister": "Ets de Cerdanyola? Cerdanyola Avui: temps, agenda i trens",
         "donate": "Dona suport al projecte",
         "skip": "Salta al contingut",
+        "theme_auto": "Tema: automàtic", "theme_light": "Tema: clar", "theme_dark": "Tema: fosc",
+        "windows_title": "Franges més barates",
         "language": "Idioma",
         "notfound_title": "Pàgina no trobada",
         "notfound_text": "Aquesta pàgina no existeix. Torna al preu de la llum d'avui.",
@@ -274,6 +279,7 @@ STRINGS = {
 """,
         "privacy_body": """
 <p>Aquest web no fa servir galetes, no té analítica ni publicitat i no recull dades personals.</p>
+<p>Si tries el tema clar o fosc, la preferència es desa només al teu navegador (localStorage) i no s'envia enlloc.</p>
 <p>Està allotjat a GitHub Pages. Com qualsevol servidor web, GitHub registra l'adreça IP de les visites per motius de seguretat. Més informació a la <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement">declaració de privacitat de GitHub</a>.</p>
 <p>Si contactes a través de GitHub, s'hi apliquen les condicions d'aquesta plataforma.</p>
 """,
@@ -369,6 +375,8 @@ STRINGS = {
         "sister": "Live in Cerdanyola? Cerdanyola Avui: weather, events and trains",
         "donate": "Support the project",
         "skip": "Skip to content",
+        "theme_auto": "Theme: auto", "theme_light": "Theme: light", "theme_dark": "Theme: dark",
+        "windows_title": "Cheapest slots",
         "language": "Language",
         "notfound_title": "Page not found",
         "notfound_text": "This page does not exist. Go back to today's electricity price.",
@@ -405,6 +413,7 @@ STRINGS = {
 """,
         "privacy_body": """
 <p>This website uses no cookies, has no analytics or advertising, and collects no personal data.</p>
+<p>If you pick the light or dark theme, the preference is stored only in your browser (localStorage) and never sent anywhere.</p>
 <p>It is hosted on GitHub Pages. Like any web server, GitHub logs visitors' IP addresses for security reasons. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>.</p>
 <p>If you contact us through GitHub, that platform's terms apply.</p>
 """,

@@ -51,3 +51,9 @@ Para cargar el histórico desde una fecha: `python src/build.py --backfill 2025-
 Los precios, la generación y las emisiones son de Red Eléctrica (apidatos.ree.es y el archivo 70 de esios.ree.es) y se muestran con fines informativos, citando la fuente y la fecha de actualización, como piden las condiciones de REE.
 
 **Antes de poner publicidad hay que pedir permiso por escrito a REE**, porque sus condiciones no permiten el uso comercial. También hará falta un banner de consentimiento certificado.
+
+## Diseño (marco común de horaverda.es y subdominios)
+- `static/base.css` es la fuente de verdad del marco común de las tres webs (tokens en `oklch` con `light-dark()`, capas `@layer`, cabecera fija, pie, selector de tema, chips de navegación). Se copia a los otros repos con `python ..\tools\sync_base.py` (vive fuera de los repos, en `D:\cerdanyolaAI\tools`; `--check` avisa si difieren). `static/site.css` son las reglas propias de esta web; el generador sirve un solo `static/style.css` con ambos.
+- Iconos: `src/icons.py` (sprite por página, solo con los iconos usados), generado con `python -I tools/make_icons.py <carpeta_svg>` a partir de los SVG de [Lucide](https://lucide.dev) (ISC). Fuente: Inter variable autoalojada en `static/fonts/` (OFL).
+- Selector de tema claro/oscuro/auto (`static/ui.js`): la preferencia se guarda en `localStorage`; sin JS rige el tema del sistema.
+- PNG (iconos PWA, `apple-touch-icon`, `og.png`): `py tools/make_assets.py` (Pillow, solo en local).

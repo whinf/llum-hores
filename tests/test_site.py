@@ -124,6 +124,9 @@ class TestSite(unittest.TestCase):
         self.assertIn("Los precios de mañana se publican", home)
         self.assertIn("43,3 %", home)
         self.assertEqual(len(re.findall(r'class="bar cheap"', home)), 3)
+        self.assertIn('data-tier="0"', home)  # barras coloreadas por nivel
+        self.assertIn('class="sprite"', home)  # sprite de iconos por página
+        self.assertIn("manifest.webmanifest", home)
         spring = (self.out / "es/precio-luz/2026/03/29/index.html").read_text(encoding="utf-8")
         self.assertEqual(spring.count('<g class="bar'), 23)
 
