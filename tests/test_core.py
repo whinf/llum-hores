@@ -29,6 +29,13 @@ class TestTz(unittest.TestCase):
         self.assertEqual(len(tz.day_hours(date(2025, 10, 26))), 25)
         self.assertEqual(len(tz.day_hours(date(2026, 12, 31))), 24)
 
+    def test_hour_labels_on_dst_days(self):
+        import svg
+        spring = [{"t": h.isoformat(), "p": 1} for h in tz.day_hours(date(2026, 3, 29))]
+        self.assertEqual(svg.hour_labels(spring)[:3], ["00:00–01:00", "01:00–03:00", "03:00–04:00"])
+        fall = [{"t": h.isoformat(), "p": 1} for h in tz.day_hours(date(2025, 10, 26))]
+        self.assertEqual(svg.hour_labels(fall)[2:4], ["02:00–03:00 CEST", "02:00–03:00 CET"])
+
     def test_offsets(self):
         self.assertEqual(tz.local_midnight(date(2026, 7, 1)).utcoffset(), timedelta(hours=2))
         self.assertEqual(tz.local_midnight(date(2026, 1, 1)).utcoffset(), timedelta(hours=1))

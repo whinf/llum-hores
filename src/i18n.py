@@ -30,8 +30,8 @@ STRINGS = {
         "home_desc": "Precio de la luz por horas hoy y mañana, las mejores horas para poner la lavadora o cargar el coche y cuánta electricidad fue renovable. Datos oficiales de Red Eléctrica.",
         "day_title": "Precio de la luz el {date}",
         "day_desc": "Precio de la luz (PVPC) por horas el {date}: media {avg} €/kWh, hora más barata {cheap} y más cara {dear}. Datos de Red Eléctrica.",
-        "month_title": "Precio de la luz en {month}",
-        "month_desc": "Precio de la luz (PVPC) día a día y hora a hora en {month}: medias, mínimos, máximos y porcentaje renovable.",
+        "month_title": "Precio de la luz {month}",
+        "month_desc": "Precio de la luz (PVPC) día a día y hora a hora {month}: medias, mínimos, máximos y porcentaje renovable.",
         "archive_title": "Histórico del precio de la luz",
         "archive_desc": "Histórico del precio de la luz (PVPC) por meses, con datos diarios y horarios de Red Eléctrica.",
         "today": "Hoy",
@@ -96,12 +96,12 @@ STRINGS = {
         "next_month": "Mes siguiente",
         "see_day": "Ver el detalle del día",
         "see_archive": "Ver el histórico",
-        "no_data": "Todavía no hay datos de precios para este día.",
+        "col_min": "Mínimo", "col_max": "Máximo", "breadcrumb": "Ruta de navegación",
         "source_line": "Datos: Red Eléctrica (REE), uso informativo. Última actualización: {t}.",
         "about": "Sobre la web",
         "legal": "Aviso legal",
         "privacy": "Privacidad",
-        "studio": "Sobre nosotros",
+        "studio": "El autor",
         "feed": "RSS",
         "api": "Datos abiertos (JSON)",
         "sister": "¿Vives en Cerdanyola? Cerdanyola Avui: tiempo, agenda y trenes",
@@ -123,7 +123,7 @@ STRINGS = {
 <ul>
 <li>Los precios son el término de energía del PVPC (tarifa 2.0TD) que publica Red Eléctrica, con peajes y cargos y sin impuestos. Se publican hacia las 20:30 para el día siguiente.</li>
 <li>Las horas se muestran en hora peninsular. Los días de cambio de hora tienen 23 o 25 horas.</li>
-<li>Las franjas más baratas se calculan buscando las horas seguidas con el precio medio más bajo del día. El nivel (barata, media, cara) divide las horas del día en tres grupos iguales.</li>
+<li>Las franjas más baratas se calculan buscando las horas seguidas con el precio medio más bajo del día. El nivel (barata, media, cara) divide las horas del día en tres grupos.</li>
 <li>El porcentaje renovable y las emisiones de CO₂ son los datos diarios de generación de todo el sistema eléctrico español que publica Red Eléctrica.</li>
 <li>La web se actualiza sola varias veces al día. No usa cookies ni rastreadores.</li>
 </ul>
@@ -164,8 +164,8 @@ STRINGS = {
         "home_desc": "Preu de la llum per hores avui i demà, les millors hores per posar la rentadora o carregar el cotxe i quanta electricitat va ser renovable. Dades oficials de Red Eléctrica.",
         "day_title": "Preu de la llum el {date}",
         "day_desc": "Preu de la llum (PVPC) per hores el {date}: mitjana {avg} €/kWh, hora més barata {cheap} i més cara {dear}. Dades de Red Eléctrica.",
-        "month_title": "Preu de la llum: {month}",
-        "month_desc": "Preu de la llum (PVPC) dia a dia i hora a hora: {month}. Mitjanes, mínims, màxims i percentatge renovable.",
+        "month_title": "Preu de la llum {month}",
+        "month_desc": "Preu de la llum (PVPC) dia a dia i hora a hora {month}: mitjanes, mínims, màxims i percentatge renovable.",
         "archive_title": "Històric del preu de la llum",
         "archive_desc": "Històric del preu de la llum (PVPC) per mesos, amb dades diàries i horàries de Red Eléctrica.",
         "today": "Avui",
@@ -230,12 +230,12 @@ STRINGS = {
         "next_month": "Mes següent",
         "see_day": "Veure el detall del dia",
         "see_archive": "Veure l'històric",
-        "no_data": "Encara no hi ha dades de preus per a aquest dia.",
+        "col_min": "Mínim", "col_max": "Màxim", "breadcrumb": "Camí de navegació",
         "source_line": "Dades: Red Eléctrica (REE), ús informatiu. Darrera actualització: {t}.",
         "about": "Sobre el web",
         "legal": "Avís legal",
         "privacy": "Privacitat",
-        "studio": "Sobre nosaltres",
+        "studio": "L'autor",
         "feed": "RSS",
         "api": "Dades obertes (JSON)",
         "sister": "Ets de Cerdanyola? Cerdanyola Avui: temps, agenda i trens",
@@ -257,7 +257,7 @@ STRINGS = {
 <ul>
 <li>Els preus són el terme d'energia del PVPC (tarifa 2.0TD) que publica Red Eléctrica, amb peatges i càrrecs i sense impostos. Es publiquen cap a les 20:30 per al dia següent.</li>
 <li>Les hores es mostren en hora peninsular. Els dies de canvi d'hora tenen 23 o 25 hores.</li>
-<li>Les franges més barates es calculen buscant les hores seguides amb el preu mitjà més baix del dia. El nivell (barata, mitjana, cara) divideix les hores del dia en tres grups iguals.</li>
+<li>Les franges més barates es calculen buscant les hores seguides amb el preu mitjà més baix del dia. El nivell (barata, mitjana, cara) divideix les hores del dia en tres grups.</li>
 <li>El percentatge renovable i les emissions de CO₂ són les dades diàries de generació de tot el sistema elèctric espanyol que publica Red Eléctrica.</li>
 <li>El web s'actualitza sol diverses vegades al dia. No fa servir galetes ni rastrejadors.</li>
 </ul>
@@ -298,8 +298,8 @@ STRINGS = {
         "home_desc": "Hourly electricity prices in Spain for today and tomorrow, the best hours to run the washing machine or charge your car, and how much power was renewable. Official Red Eléctrica data.",
         "day_title": "Electricity price in Spain on {date}",
         "day_desc": "Hourly electricity price (PVPC) in Spain on {date}: average {avg} €/kWh, cheapest hour {cheap}, most expensive {dear}. Red Eléctrica data.",
-        "month_title": "Electricity price in Spain, {month}",
-        "month_desc": "Spanish electricity price (PVPC) day by day and hour by hour in {month}: averages, lows, highs and renewable share.",
+        "month_title": "Electricity price in Spain {month}",
+        "month_desc": "Spanish electricity price (PVPC) day by day and hour by hour {month}: averages, lows, highs and renewable share.",
         "archive_title": "Electricity price history",
         "archive_desc": "Monthly history of the Spanish electricity price (PVPC), with daily and hourly Red Eléctrica data.",
         "today": "Today",
@@ -364,19 +364,19 @@ STRINGS = {
         "next_month": "Next month",
         "see_day": "See the day in detail",
         "see_archive": "See the history",
-        "no_data": "There is no price data for this day yet.",
+        "col_min": "Low", "col_max": "High", "breadcrumb": "Breadcrumb",
         "source_line": "Data: Red Eléctrica (REE), for information purposes. Last update: {t}.",
         "about": "About",
         "legal": "Legal notice",
         "privacy": "Privacy",
-        "studio": "About us",
+        "studio": "About the author",
         "feed": "RSS",
         "api": "Open data (JSON)",
         "sister": "Live in Cerdanyola? Cerdanyola Avui: weather, events and trains",
         "donate": "Support the project",
         "skip": "Skip to content",
         "theme_auto": "Theme: auto", "theme_light": "Theme: light", "theme_dark": "Theme: dark",
-        "windows_title": "Cheapest slots",
+        "windows_title": "Cheapest windows",
         "language": "Language",
         "notfound_title": "Page not found",
         "notfound_text": "This page does not exist. Go back to today's electricity price.",
@@ -391,7 +391,7 @@ STRINGS = {
 <ul>
 <li>Prices are the energy term of the PVPC (2.0TD tariff) published by Red Eléctrica, including tolls and charges and excluding taxes. They are published at around 20:30 for the next day.</li>
 <li>Hours are shown in mainland Spanish time. Days when the clocks change have 23 or 25 hours.</li>
-<li>The cheapest windows are the consecutive hours with the lowest average price of the day. The level (cheap, medium, expensive) splits the day's hours into three equal groups.</li>
+<li>The cheapest windows are the consecutive hours with the lowest average price of the day. The level (cheap, medium, expensive) splits the day's hours into three groups.</li>
 <li>The renewable share and CO₂ emissions are Red Eléctrica's daily generation figures for the whole Spanish power system.</li>
 <li>The site updates itself several times a day. It uses no cookies or trackers.</li>
 </ul>
@@ -460,6 +460,13 @@ def fmt_date(lang, d, weekday=True, year=True):
     return f"{WEEKDAYS[lang][d.weekday()]}, {s}" if weekday else s
 
 
-def fmt_month(lang, year, month):
+def fmt_month(lang, year, month, article=False):
+    """«octubre de 2026»; con `article`, la forma que va dentro de una frase: «en octubre de 2026»,
+    «l'octubre de 2026» / «el novembre de 2026», «in October 2026»."""
     name = MONTHS[lang][month - 1]
-    return f"{name} {year}" if lang == "en" else f"{name} de {year}"
+    s = f"{name} {year}" if lang == "en" else f"{name} de {year}"
+    if not article:
+        return s
+    if lang == "ca":
+        return ("l'" if name[0] in "aeiou" else "el ") + s
+    return ("in " if lang == "en" else "en ") + s

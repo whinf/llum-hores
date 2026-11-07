@@ -21,7 +21,7 @@ jobs:
             "https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=${D}T00:00&end_date=${D}T23:59&time_trunc=hour" \
             "https://apidatos.ree.es/es/datos/generacion/estructura-generacion?start_date=${D}T00:00&end_date=${D}T23:59&time_trunc=day" \
             "https://api.esios.ree.es/archives/70/download_json?locale=es&date=${D}"; do
-            code=$(curl -s -o body.json -w "%{http_code}" -A "$UA" "$url")
+            code=$(curl -s --max-time 30 -o body.json -w "%{http_code}" -A "$UA" "$url")
             echo "$code  $url"
             head -c 200 body.json; echo
             [ "$code" = "200" ] && grep -q '"' body.json && ok=$((ok+1))

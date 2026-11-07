@@ -7,24 +7,26 @@ def _windows(prices, length):
         yield i, fsum(prices[i:i + length]) / length
 
 
+def _extreme(prices, length, sign):
+    """Franja con la media mínima (sign=1) o máxima (sign=-1); en empate, la que empieza antes."""
+    best = None
+    for i, avg in _windows(prices, length):
+        if best is None or sign * round(avg, 9) < sign * round(best[1], 9):
+            best = (i, avg)
+    return best
+
+
 def cheapest(prices, length):
     """(índice de inicio, precio medio) de la franja contigua más barata.
 
     En caso de empate gana la que empieza antes. None si no caben `length` horas.
     """
-    best = None
-    for i, avg in _windows(prices, length):
-        if best is None or round(avg, 9) < round(best[1], 9):
-            best = (i, avg)
-    return best
+    return _extreme(prices, length, 1)
 
 
 def priciest(prices, length):
-    worst = None
-    for i, avg in _windows(prices, length):
-        if worst is None or round(avg, 9) > round(worst[1], 9):
-            worst = (i, avg)
-    return worst
+    """Como `cheapest`, pero la franja más cara."""
+    return _extreme(prices, length, -1)
 
 
 def summary(prices):

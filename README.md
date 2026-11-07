@@ -42,6 +42,8 @@ Para cargar el histórico desde una fecha: `python src/build.py --backfill 2025-
 
 - `site_name`: nombre de la web.
 - `donate_url`: enlace de donación (Ko-fi o GitHub Sponsors). Si está vacío, no se muestra el botón.
+- `sister_url` y `studio_url`: enlaces a Cerdanyola Avui y a la página del autor; vacíos, no se muestran.
+- `repo_url`: URL del repositorio para los enlaces «avisar de errores». En GitHub se rellena solo.
 - `owner`: tus datos para el aviso legal. Solo son necesarios si la web genera ingresos (ley LSSI).
 - `appliances`: duración y consumo de cada electrodoméstico.
 - `site_url`: solo se usa en local. En GitHub se toma automáticamente la URL de Pages, también cuando hay dominio propio.

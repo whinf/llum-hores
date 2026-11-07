@@ -4,7 +4,9 @@ Precios: término de energía del PVPC 2.0TD (indicador 1001) en €/MWh, con
 peajes y cargos, sin impuestos. Fuente principal apidatos.ree.es; respaldo,
 el archivo 70 de ESIOS. Ninguna de las dos pide token.
 """
+import http.client
 import json
+import os
 import time
 import urllib.error
 import urllib.request
@@ -14,7 +16,10 @@ import tz
 
 APIDATOS = "https://apidatos.ree.es/es/datos"
 ESIOS_70 = "https://api.esios.ree.es/archives/70/download_json?locale=es&date={day}"
-USER_AGENT = "Mozilla/5.0 (compatible; llum-hores/1.0; +https://github.com/)"
+USER_AGENT = "Mozilla/5.0 (compatible; llum-hores/1.0; +https://github.com/{})".format(
+    os.environ.get("GITHUB_REPOSITORY", "whinf/llum-hores"))
+# Errores de red reintentables: conexión, lectura a medias, SSL, respuesta no JSON...
+NET_ERRORS = (urllib.error.URLError, OSError, http.client.HTTPException, json.JSONDecodeError, UnicodeDecodeError)
 
 # Agrupación de tecnologías de "estructura-generacion" (por id de REE).
 SOURCES = {
@@ -39,11 +44,12 @@ def get_json(url, tries=3, timeout=40):
         try:
             with urllib.request.urlopen(req, timeout=timeout) as resp:
                 return json.loads(resp.read().decode("utf-8"))
-        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError) as exc:
+        except NET_ERRORS as exc:
             last = exc
             if isinstance(exc, urllib.error.HTTPError) and exc.code < 500:
                 break
-            time.sleep(3 * (attempt + 1))
+            if attempt + 1 < tries:
+                time.sleep(3 * (attempt + 1))
     raise FetchError(f"{url}: {last}")
 
 
@@ -86,8 +92,11 @@ def parse_esios70(doc, day):
     starts = tz.day_hours(day)
     if not rows or len(rows) != len(starts):
         return None
-    return [{"t": s.isoformat(), "p": round(float(r["PCB"].replace(".", "").replace(",", ".")), 2)}
-            for s, r in zip(starts, rows)]
+    try:
+        return [{"t": s.isoformat(), "p": round(float(r["PCB"].replace(".", "").replace(",", ".")), 2)}
+                for s, r in zip(starts, rows)]
+    except (KeyError, ValueError, AttributeError):
+        return None
 
 
 def fetch_pvpc(day):

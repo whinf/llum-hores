@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 import i18n
 import icons
+import ree
 import svg
 import tz
 import windows
@@ -20,6 +21,11 @@ THEME_SCRIPT = ('<script>(function(){try{var t=localStorage.getItem("theme");'
                 'if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}})()</script>')
 THEME_COLOR = ('<meta name="theme-color" content="#fcfcfb" media="(prefers-color-scheme: light)">\n'
                '<meta name="theme-color" content="#1c1c1a" media="(prefers-color-scheme: dark)">')
+
+
+def jsonld_text(obj):
+    """JSON para <script type="application/ld+json">: «<» escapado para que un texto externo no cierre el script."""
+    return json.dumps(obj, ensure_ascii=False).replace("<", "\\u003c")
 
 
 def fmt_dt(iso):
@@ -80,8 +86,7 @@ class Site:
                        for lg in LANGS)
         x_default = self.absolute("/") if kind == "home" else self.absolute(self.path("es", kind, d))
         alts += f'<link rel="alternate" hreflang="x-default" href="{x_default}">'
-        ld = "".join(f'<script type="application/ld+json">{json.dumps(j, ensure_ascii=False)}</script>'
-                     for j in (jsonld or []))
+        ld = "".join(f'<script type="application/ld+json">{jsonld_text(j)}</script>' for j in (jsonld or []))
         head = f"""<!doctype html>
 <html lang="{lang}">
 <head>
@@ -134,8 +139,10 @@ class Site:
                   if sister_url else "")
         updated = self.records[self.days[-1]].get("prices_fetched") if self.days else None
         links = [f'<li><a href="{self.href(self.path(lang, k))}">{t(lang, k)}</a></li>' for k in ("about", "legal", "privacy")]
-        links += [f'<li><a href="https://onestudioman.horaverda.es/{lang}/">{t(lang, "studio")}</a></li>',
-                  f'<li><a href="{self.href(self.path(lang, "archive"))}">{t(lang, "archive_title")}</a></li>',
+        studio_url = self.cfg.get("studio_url")
+        if studio_url:
+            links.append(f'<li><a href="{esc(studio_url.rstrip("/"))}/{lang}/">{t(lang, "studio")}</a></li>')
+        links += [f'<li><a href="{self.href(self.path(lang, "archive"))}">{t(lang, "archive_title")}</a></li>',
                   f'<li><a href="{self.href("/api/v1/latest.json")}">{t(lang, "api")}</a></li>',
                   f'<li><a href="{self.href(self.path(lang, "feed"))}">{t(lang, "feed")}</a></li>']
         sprite = icons.sprite(self.icons)
@@ -251,7 +258,7 @@ class Site:
         for key, pct in sorted(mix.get("sources", {}).items(), key=lambda kv: -kv[1]):
             if pct < 0.5:
                 continue
-            ren = "ren" if key in ("wind", "solar", "hydro", "other_renewable") else "fos"
+            ren = "ren" if key in ree.RENEWABLE else "fos"
             rows.append(f'<li class="{ren}"><span class="name">{t(lang, "src_" + key)}</span>'
                         f'<span class="track"><span style="width:{min(100, pct):.1f}%"></span></span>'
                         f'<span class="pct">{i18n.fmt_pct(lang, pct)}</span></li>')
@@ -282,7 +289,7 @@ class Site:
                         f'<td class="num">{i18n.fmt_price(lang, s["min"])}</td>'
                         f'<td class="num">{i18n.fmt_pct(lang, mix["renewable_pct"], 0) if mix else "–"}</td></tr>')
         return (f'<table class="recent"><thead><tr><th>{t(lang, "day")}</th><th class="num">{t(lang, "avg")}</th>'
-                f'<th class="num">{t(lang, "min")}</th><th class="num">{t(lang, "renewable")}</th></tr></thead>'
+                f'<th class="num">{t(lang, "col_min")}</th><th class="num">{t(lang, "renewable")}</th></tr></thead>'
                 f'<tbody>{"".join(rows)}</tbody></table>')
 
     # ---------- páginas ----------
@@ -325,7 +332,7 @@ class Site:
         if kind == "day":
             items.append((i18n.fmt_date(lang, d, weekday=False), self.path(lang, "day", d)))
         html = " › ".join(f'<a href="{self.href(p)}">{esc(n)}</a>' for n, p in items[:-1])
-        html = f'<nav class="crumbs" aria-label="breadcrumb">{html} › <span>{esc(items[-1][0])}</span></nav>'
+        html = f'<nav class="crumbs" aria-label="{t(lang, "breadcrumb")}">{html} › <span>{esc(items[-1][0])}</span></nav>'
         ld = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
             {"@type": "ListItem", "position": i + 1, "name": n, "item": self.absolute(p)}
             for i, (n, p) in enumerate(items)]}
@@ -372,7 +379,7 @@ class Site:
 
     def month_page(self, lang, ym, days):
         first = date(ym[0], ym[1], 1)
-        name = i18n.fmt_month(lang, *ym)
+        name = i18n.fmt_month(lang, *ym, article=True)
         title = t(lang, "month_title", month=name)
         crumbs, crumbs_ld = self.breadcrumbs(lang, first, "month")
         heat = svg.heatmap(lang, [(d, self.records[d]["hours"]) for d in days],
@@ -394,8 +401,8 @@ class Site:
             nav.append(f'<a rel="next" href="{self.href(self.path(lang, "month", date(*keys[i + 1], 1)))}">{t(lang, "next_month")} →</a>')
         body = (f'{crumbs}<h1>{esc(title)}</h1><h2>{t(lang, "heatmap_title")}</h2><figure class="fig scroll">{heat}</figure>'
                 f'<h2>{t(lang, "month_days")}</h2><table class="recent"><thead><tr><th>{t(lang, "day")}</th>'
-                f'<th class="num">{t(lang, "avg")}</th><th class="num">{t(lang, "min")}</th>'
-                f'<th class="num">{t(lang, "max")}</th><th class="num">{t(lang, "renewable")}</th></tr></thead>'
+                f'<th class="num">{t(lang, "avg")}</th><th class="num">{t(lang, "col_min")}</th>'
+                f'<th class="num">{t(lang, "col_max")}</th><th class="num">{t(lang, "renewable")}</th></tr></thead>'
                 f'<tbody>{"".join(rows)}</tbody></table><nav class="pager">{"".join(nav)}</nav>')
         return self.layout(lang, "month", first, f"{title} · {self.name}",
                            t(lang, "month_desc", month=name), body, [crumbs_ld])
@@ -511,7 +518,7 @@ location.replace("{self.prefix}/es/");}})();
             title = t(lang, "feed_item", date=i18n.fmt_date(lang, d), h=labels[s["min_i"]],
                       p=i18n.fmt_price(lang, s["min"]))
             url = self.absolute(self.path(lang, "day", d))
-            pub = tz.local_midnight(d).strftime("%a, %d %b %Y %H:%M:%S %z")
+            pub = min(tz.local_midnight(d), self.now).strftime("%a, %d %b %Y %H:%M:%S %z")
             items.append(f"<item><title>{esc(title)}</title><link>{url}</link><guid>{url}</guid>"
                          f"<pubDate>{pub}</pubDate></item>")
         return (f'<?xml version="1.0" encoding="utf-8"?>\n<rss version="2.0"><channel>'
@@ -569,8 +576,8 @@ location.replace("{self.prefix}/es/");}})();
             for ym, days in self.months().items():
                 self.write(self.path(lang, "month", date(*ym, 1)), self.month_page(lang, ym, days))
         entries += [("about", None, None), ("legal", None, None), ("privacy", None, None)]
-        entries += [("month", date(*ym, 1), max(days).isoformat()) for ym, days in self.months().items()]
-        entries += [("day", d, d.isoformat()) for d in self.days]
+        entries += [("month", date(*ym, 1), min(max(days), self.now.date()).isoformat()) for ym, days in self.months().items()]
+        entries += [("day", d, min(d, self.now.date()).isoformat()) for d in self.days]
         for d in self.days:
             self.write(f"/api/v1/days/{d.isoformat()}.json", json.dumps(self.day_api(d), ensure_ascii=False))
         self.write("/api/v1/latest.json", json.dumps(self.latest_api(), ensure_ascii=False, indent=1))

@@ -33,7 +33,11 @@ def hour_labels(hours):
     seen = [s.hour for s in starts]
     out = []
     for s in starts:
-        label = f"{s.hour:02d}:00–{(s.hour + 1) % 24:02d}:00"
+        end = tz.to_madrid(s + tz.HOUR)
+        # En primavera la 01:00 acaba a las 03:00 (las 02:00 no existen); en otoño se mantiene la hora
+        # «de reloj» de cada tramo y el sufijo CEST/CET los distingue.
+        end_hour = end.hour if end.utcoffset() > s.utcoffset() else (s.hour + 1) % 24
+        label = f"{s.hour:02d}:00–{end_hour:02d}:00"
         if seen.count(s.hour) > 1:
             label += " CEST" if s.utcoffset().total_seconds() == 7200 else " CET"
         out.append(label)
@@ -64,13 +68,13 @@ def price_bars(lang, hours, window, uid):
                   end=labels[ws + wl - 1].split("–")[1] if window else "")
     out = [f'<svg class="chart" viewBox="0 0 {W} {H}" role="img" aria-labelledby="{uid}-t {uid}-d">',
            f'<title id="{uid}-t">{escape(title)}</title><desc id="{uid}-d">{escape(desc)}</desc>']
-    v = y_min
-    while v <= y_max + 1e-9:
+    decimals = 3 if round(step * 100, 6) % 1 else 2  # 0,025 → tres decimales
+    for k in range(round((y_max - y_min) / step) + 1):
+        v = y_min + k * step
         yy = y(v)
         out.append(f'<line class="grid" x1="{left}" x2="{W - right}" y1="{yy:.1f}" y2="{yy:.1f}"/>'
                    f'<text class="tick" x="{left - 6}" y="{yy:.1f}" text-anchor="end" dominant-baseline="middle">'
-                   f'{i18n.fmt_num(lang, v, 2)}</text>')
-        v += step
+                   f'{i18n.fmt_num(lang, v, decimals)}</text>')
     base = y(0)
     tiers = windows.tiers([h["p"] for h in hours])
     for i, p in enumerate(prices):
@@ -80,7 +84,7 @@ def price_bars(lang, hours, window, uid):
         cls = "bar cheap" if ws <= i < ws + wl else "bar"
         tip = f"{labels[i]} · {i18n.fmt_price(lang, hours[i]['p'])} €/kWh"
         out.append(
-            f'<g class="{cls}" data-tier="{tiers[i]}" data-s="{int(s.timestamp() * 1000)}" tabindex="0">'
+            f'<g class="{cls}" data-tier="{tiers[i]}" data-s="{int(s.timestamp() * 1000)}">'
             f'<title>{escape(tip)}</title>'
             f'<rect class="hit" x="{x - 1:.1f}" y="{top}" width="{slot:.1f}" height="{ph}"/>'
             f'<path class="fill" d="{_bar_path(x, base, y(p), w)}"/>'

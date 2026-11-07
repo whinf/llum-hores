@@ -4,6 +4,7 @@
  "repo_url": "",
  "donate_url": "https://ko-fi.com/onestudioman",
  "sister_url": "https://cerdanyola.horaverda.es",
+ "studio_url": "https://onestudioman.horaverda.es",
  "owner": {"name": "", "nif": "", "email": ""},
  "appliances": [
   {"id": "washer", "hours": 2, "kwh": 1.0},
