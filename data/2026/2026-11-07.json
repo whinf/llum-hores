@@ -98,6 +98,22 @@
    "t": "2026-11-07T23:00:00+01:00"
   }
  ],
+ "mix": {
+  "co2_g_kwh": 170,
+  "renewable_pct": 39.1,
+  "sources": {
+   "coal": 0.8,
+   "cogeneration": 6.2,
+   "gas": 33.0,
+   "hydro": 9.1,
+   "nuclear": 18.6,
+   "other_fossil": 2.3,
+   "other_renewable": 2.1,
+   "solar": 19.1,
+   "wind": 8.8
+  }
+ },
+ "mix_fetched": "2026-11-08T02:18:38+01:00",
  "prices_fetched": "2026-11-07T00:26:19+01:00",
  "prices_source": "apidatos"
 }
