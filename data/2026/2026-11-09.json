@@ -98,6 +98,11 @@
    "t": "2026-11-09T23:00:00+01:00"
   }
  ],
+ "mix": {
+  "co2_g_kwh": 78,
+  "renewable_pct": 62.6
+ },
+ "mix_fetched": "2026-11-10T02:44:14+01:00",
  "prices_fetched": "2026-11-08T23:23:20+01:00",
  "prices_source": "apidatos"
 }
