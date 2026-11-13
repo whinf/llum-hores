@@ -12,7 +12,7 @@ NAMES = """zap train-front banknote fuel plug-zap party-popper ticket link const
 building briefcase piggy-bank sparkles utensils siren calendar bell clock baby hourglass map-pin sprout heart
 trees footprints landmark drama coffee moon trophy handshake monitor sun chevron-down gamepad-2 wand-sparkles
 clapperboard message-circle arrow-right arrow-left trending-down trending-up thermometer droplets wind cloud-sun
-info gift tag""".split()
+info gift tag smartphone""".split()
 
 HEADER = '''"""Iconos SVG como sprite por página.
 
