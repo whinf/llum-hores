@@ -104,16 +104,16 @@
   "sources": {
    "coal": 0.0,
    "cogeneration": 2.5,
-   "gas": 6.9,
-   "hydro": 5.5,
-   "nuclear": 18.4,
-   "other_fossil": 2.3,
-   "other_renewable": 1.7,
-   "solar": 6.9,
-   "wind": 55.9
+   "gas": 7.7,
+   "hydro": 5.4,
+   "nuclear": 18.1,
+   "other_fossil": 2.5,
+   "other_renewable": 1.6,
+   "solar": 6.8,
+   "wind": 55.2
   }
  },
- "mix_fetched": "2026-11-18T02:12:57+01:00",
+ "mix_fetched": "2026-11-18T04:38:37+01:00",
  "prices_fetched": "2026-11-17T03:00:34+01:00",
  "prices_source": "apidatos"
 }
