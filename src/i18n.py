@@ -106,6 +106,7 @@ STRINGS = {
         "api": "Datos abiertos (JSON)",
         "sister": "¿Vives en Cerdanyola? Cerdanyola Avui: tiempo, agenda y trenes",
         "donate": "Apoya el proyecto",
+        "visits": "Visitas: {today} hoy · {total} en total",
         "skip": "Saltar al contenido",
         "theme_auto": "Tema: automático", "theme_light": "Tema: claro", "theme_dark": "Tema: oscuro",
         "windows_title": "Franjas más baratas",
@@ -144,7 +145,8 @@ STRINGS = {
 <p>La información se ofrece tal cual, sin garantía. Puede contener errores o retrasos. Para decisiones importantes, consulta tu factura o a tu comercializadora.</p>
 """,
         "privacy_body": """
-<p>Esta web no usa cookies, no tiene analítica ni publicidad y no recoge datos personales.</p>
+<p>Esta web no usa cookies, no tiene publicidad ni analítica de seguimiento y no recoge datos personales.</p>
+<p>El pie de cada página muestra un contador de visitas anónimo: cada carga de página suma uno a un número diario guardado en Cloudflare, sin cookies, sin guardar la IP ni ningún dato sobre ti.</p>
 <p>Si eliges el tema claro u oscuro, la preferencia se guarda solo en tu navegador (localStorage) y no se envía a ningún sitio.</p>
 <p>Está alojada en GitHub Pages. Como cualquier servidor web, GitHub registra la dirección IP de las visitas por motivos de seguridad. Más información en la <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement">declaración de privacidad de GitHub</a>.</p>
 <p>Si contactas a través de GitHub, se aplican las condiciones de esa plataforma.</p>
@@ -240,6 +242,7 @@ STRINGS = {
         "api": "Dades obertes (JSON)",
         "sister": "Ets de Cerdanyola? Cerdanyola Avui: temps, agenda i trens",
         "donate": "Dona suport al projecte",
+        "visits": "Visites: {today} avui · {total} en total",
         "skip": "Salta al contingut",
         "theme_auto": "Tema: automàtic", "theme_light": "Tema: clar", "theme_dark": "Tema: fosc",
         "windows_title": "Franges més barates",
@@ -278,7 +281,8 @@ STRINGS = {
 <p>La informació s'ofereix tal com és, sense garantia. Pot contenir errors o retards. Per a decisions importants, consulta la teva factura o la teva comercialitzadora.</p>
 """,
         "privacy_body": """
-<p>Aquest web no fa servir galetes, no té analítica ni publicitat i no recull dades personals.</p>
+<p>Aquest web no fa servir galetes, no té publicitat ni analítica de seguiment i no recull dades personals.</p>
+<p>El peu de cada pàgina mostra un comptador de visites anònim: cada càrrega de pàgina suma u a un número diari desat a Cloudflare, sense galetes, sense desar la IP ni cap dada sobre tu.</p>
 <p>Si tries el tema clar o fosc, la preferència es desa només al teu navegador (localStorage) i no s'envia enlloc.</p>
 <p>Està allotjat a GitHub Pages. Com qualsevol servidor web, GitHub registra l'adreça IP de les visites per motius de seguretat. Més informació a la <a href="https://docs.github.com/es/site-policy/privacy-policies/github-general-privacy-statement">declaració de privacitat de GitHub</a>.</p>
 <p>Si contactes a través de GitHub, s'hi apliquen les condicions d'aquesta plataforma.</p>
@@ -374,6 +378,7 @@ STRINGS = {
         "api": "Open data (JSON)",
         "sister": "Live in Cerdanyola? Cerdanyola Avui: weather, events and trains",
         "donate": "Support the project",
+        "visits": "Visits: {today} today · {total} in total",
         "skip": "Skip to content",
         "theme_auto": "Theme: auto", "theme_light": "Theme: light", "theme_dark": "Theme: dark",
         "windows_title": "Cheapest windows",
@@ -412,7 +417,8 @@ STRINGS = {
 <p>The information is provided as is, without warranty. It may contain errors or delays. For important decisions, check your bill or ask your energy supplier.</p>
 """,
         "privacy_body": """
-<p>This website uses no cookies, has no analytics or advertising, and collects no personal data.</p>
+<p>This website uses no cookies, has no advertising or tracking analytics, and collects no personal data.</p>
+<p>Each page footer shows an anonymous visit counter: every page load adds one to a daily number stored on Cloudflare, with no cookies and without storing your IP or any data about you.</p>
 <p>If you pick the light or dark theme, the preference is stored only in your browser (localStorage) and never sent anywhere.</p>
 <p>It is hosted on GitHub Pages. Like any web server, GitHub logs visitors' IP addresses for security reasons. See the <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub privacy statement</a>.</p>
 <p>If you contact us through GitHub, that platform's terms apply.</p>

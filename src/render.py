@@ -134,6 +134,8 @@ class Site:
         donate = (f'<p class="support"><a class="donate" href="{esc(self.cfg["donate_url"])}" rel="noopener">'
                   f'{self.i("heart")} {t(lang, "donate")}</a></p>'
                   if self.cfg.get("donate_url") else "")
+        visits = (f'<p class="visits" data-visits="{esc(self.cfg["visits_url"])}" data-text="{esc(t(lang, "visits"))}" hidden></p>'
+                  if self.cfg.get("visits_url") else "")
         sister_url = self.cfg.get("sister_url")
         sister = (f'<a class="sister" href="{esc(sister_url.rstrip("/"))}/{lang}/">{self.i("map-pin")} {t(lang, "sister")}</a>'
                   if sister_url else "")
@@ -164,7 +166,7 @@ class Site:
 <p>{t(lang, "source_line", t=fmt_dt(updated))}</p>
 {f"<p>{sister}</p>" if sister else ""}
 <ul class="foot-links">{"".join(links)}</ul>
-{donate}
+{visits}{donate}
 </div></footer>
 </body>
 </html>
