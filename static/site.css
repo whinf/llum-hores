@@ -86,5 +86,54 @@
   .widget .wtitle small { font-weight: 400; color: var(--muted); }
   .widget p { margin: 6px 0 0; }
 
+  /* Webs locales hermanas: franja bajo la cabecera */
+  .locals-strip { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s-2) var(--s-3); }
+  .locals-strip .q { display: inline-flex; align-items: center; gap: .4em; color: var(--ink-2); font-weight: 500; }
+  .locals-strip .q .i { margin: 0; color: var(--accent); }
+  .promo.locals-strip a { align-items: center; gap: .35em; padding: .2rem .7rem; border-radius: var(--r-pill);
+    border: 1px solid var(--border); background: var(--surface); text-decoration: none; white-space: nowrap;
+    transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease); }
+  .promo.locals-strip a .i { margin: 0; transition: transform var(--dur) var(--ease); }
+  .promo.locals-strip a:hover { border-color: var(--accent); background: var(--tint-good); }
+  .promo.locals-strip a:hover .i { transform: translateX(2px); }
+
+  /* Webs locales hermanas: tarjetas antes del pie */
+  .locals h2 { margin-block-end: var(--s-2); }
+  .locals-lede { color: var(--ink-2); max-inline-size: 62ch; margin-block-end: var(--s-4); }
+  .cities { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: var(--s-4); }
+  .city { position: relative; display: flex; flex-direction: column; overflow: hidden; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--r-l); box-shadow: var(--shadow-1);
+    transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), border-color var(--dur) var(--ease); }
+  .city:hover { transform: translateY(-2px); border-color: color-mix(in oklab, var(--accent) 45%, var(--border));
+    box-shadow: var(--shadow-1), 0 10px 28px -14px color-mix(in oklab, var(--ink) 40%, transparent); }
+  .city:focus-within { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .city-img { aspect-ratio: 3 / 1; background: var(--surface-2); }
+  .city-img img { display: block; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  .city-img .night { display: none; }
+  .city-body { display: flex; flex-direction: column; gap: var(--s-2); flex: 1; padding: var(--s-3) var(--s-4) var(--s-4); }
+  .city h3 { font-size: var(--fs-1); margin: 0; }
+  .city h3 a { color: var(--ink); text-decoration: none; }
+  .city h3 a:focus-visible { outline: none; }
+  .city h3 a::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+  .city-area { display: flex; align-items: center; gap: .35em; margin: -.2rem 0 0; color: var(--muted); font-size: var(--fs-s); }
+  .city-feat { list-style: none; margin: var(--s-1) 0 0; padding: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem .6rem; }
+  .city-feat li { display: flex; align-items: center; gap: .5em; font-size: var(--fs-s); color: var(--ink-2); line-height: 1.25; }
+  .city-feat .i { flex: none; inline-size: 1.85rem; block-size: 1.85rem; padding: .42rem; border-radius: var(--r-s);
+    background: var(--tint-good); color: var(--good-ink); }
+  .city-more { margin: 0; color: var(--muted); font-size: var(--fs-s); }
+  .city-go { margin-block-start: auto; padding-block-start: var(--s-2); display: inline-flex; align-items: center; gap: .35em;
+    color: var(--accent); font-weight: 600; font-size: var(--fs-s); }
+  .city-go .i { transition: transform var(--dur) var(--ease); }
+  .city:hover .city-go .i { transform: translateX(3px); }
+  @media (max-width: 22rem) { .city-feat { grid-template-columns: 1fr; } }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .city-img .day { display: none; }
+    :root:not([data-theme="light"]) .city-img .night { display: block; }
+  }
+  :root[data-theme="dark"] .city-img .day { display: none; }
+  :root[data-theme="dark"] .city-img .night { display: block; }
+  @media (prefers-reduced-motion: reduce) { .city, .city:hover { transform: none; } }
+  @media print { .locals { display: none; } }
+
   @media (forced-colors: active) { .chart .bar.cheap .fill { fill: Highlight; } }
 }

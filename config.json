@@ -3,7 +3,10 @@
  "site_url": "http://localhost:8000",
  "repo_url": "",
  "donate_url": "https://ko-fi.com/onestudioman",
- "sister_url": "https://cerdanyola.horaverda.es",
+ "locals": [
+  {"id": "cer", "name": "Cerdanyola Avui", "url": "https://cerdanyola.horaverda.es"},
+  {"id": "sc", "name": "Sant Cugat Avui", "url": "https://santcugat.horaverda.es"}
+ ],
  "studio_url": "https://onestudioman.horaverda.es",
  "visits_url": "https://cerdanyola-board.chatcerdanyola.workers.dev/hit?site=hv",
  "owner": {"name": "", "nif": "", "email": ""},

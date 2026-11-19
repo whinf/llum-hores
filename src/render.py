@@ -16,6 +16,9 @@ from i18n import LANGS, t
 
 ROOT = Path(__file__).resolve().parent.parent
 WINDOW = 3  # horas de la franja destacada
+# Icono propio de esta web (Lucide «pill», ISC como el resto) para las tarjetas de las webs locales.
+icons.LUCIDE.setdefault("pill", '<path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z" />'
+                                '<path d="m8.5 8.5 7 7" />')
 # Aplica el tema guardado antes de pintar (evita el parpadeo); sin JS rige el tema del sistema.
 THEME_SCRIPT = ('<script>(function(){try{var t=localStorage.getItem("theme");'
                 'if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}})()</script>')
@@ -136,9 +139,7 @@ class Site:
                   if self.cfg.get("donate_url") else "")
         visits = (f'<p class="visits" data-visits="{esc(self.cfg["visits_url"])}" data-text="{esc(t(lang, "visits"))}" hidden></p>'
                   if self.cfg.get("visits_url") else "")
-        sister_url = self.cfg.get("sister_url")
-        sister = (f'<a class="sister" href="{esc(sister_url.rstrip("/"))}/{lang}/">{self.i("map-pin")} {t(lang, "sister")}</a>'
-                  if sister_url else "")
+        strip, locals_ = self.local_sites(lang)
         updated = self.records[self.days[-1]].get("prices_fetched") if self.days else None
         links = [f'<li><a href="{self.href(self.path(lang, k))}">{t(lang, k)}</a></li>' for k in ("about", "legal", "privacy")]
         studio_url = self.cfg.get("studio_url")
@@ -158,19 +159,46 @@ class Site:
 <nav class="langs" aria-label="{t(lang, 'language')}">{switch}</nav>
 {theme}
 </div></header>
-{f'<div class="wrap promo">{sister}</div>' if sister else ""}
+{strip}
 <main id="main" class="wrap">
 {body}
 </main>
+{locals_}
 <footer class="foot"><div class="wrap">
 <p>{t(lang, "source_line", t=fmt_dt(updated))}</p>
-{f"<p>{sister}</p>" if sister else ""}
 <ul class="foot-links">{"".join(links)}</ul>
 {visits}{donate}
 </div></footer>
 </body>
 </html>
 """
+
+    def local_sites(self, lang):
+        """Webs locales hermanas: franja compacta bajo la cabecera y tarjetas con lo que ofrece cada una antes del pie."""
+        sites = self.cfg.get("locals") or []
+        if not sites:
+            return "", ""
+        url = {s["id"]: f'{esc(s["url"].rstrip("/"))}/{lang}/' for s in sites}
+        go = self.i("arrow-right")
+        strip = (f'<div class="wrap promo locals-strip"><span class="q">{self.i("map-pin")} {t(lang, "locals_q")}</span>'
+                 + "".join(f'<a href="{url[s["id"]]}">{esc(s["name"])} {go}</a>' for s in sites) + "</div>")
+        cards = []
+        for s in sites:
+            k = s["id"]
+            img = "".join(f'<img class="{m}" src="{self.href(f"/static/img/city-{k}-{m}.webp")}" alt="" width="600" '
+                          f'height="200" loading="lazy" decoding="async">' for m in ("day", "night"))
+            feats = "".join(f"<li>{self.i(ic)}<span>{esc(txt)}</span></li>" for ic, txt in t(lang, f"locals_{k}"))
+            cards.append(
+                f'<article class="city"><div class="city-img" aria-hidden="true">{img}</div><div class="city-body">'
+                f'<h3><a href="{url[k]}">{esc(s["name"])}</a></h3>'
+                f'<p class="city-area">{self.i("map-pin")} {esc(t(lang, f"locals_{k}_area"))}</p>'
+                f'<ul class="city-feat">{feats}</ul>'
+                f'<p class="city-more">{esc(t(lang, f"locals_{k}_more"))}</p>'
+                f'<span class="city-go" aria-hidden="true">{t(lang, "locals_open")} {esc(s["name"])} {go}</span>'
+                f"</div></article>")
+        section = (f'<section class="wrap locals" aria-labelledby="locals-h"><h2 id="locals-h">{t(lang, "locals_q")}</h2>'
+                   f'<p class="locals-lede">{esc(t(lang, "locals_lede"))}</p><div class="cities">{"".join(cards)}</div></section>')
+        return strip, section
 
     # ---------- piezas ----------
     def prices(self, d):
