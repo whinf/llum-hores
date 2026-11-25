@@ -1,7 +1,8 @@
 """Miniaturas de las webs locales (tarjetas «Tu ciudad, al día») a partir de sus banners.
 
-Lee los banners móviles 3:1 de los repos hermanos (../cerdanyola-local, ../santcugat-local, ../santesteve-local) y escribe
-static/img/city-{cer,sc,se}-{day,night}.webp a 600x200. Solo hace falta volver a lanzarlo si cambian los banners.
+Lee los banners móviles 3:1 de los repos hermanos (../cerdanyola-local, ../santcugat-local, ../santesteve-local,
+../vilassar-local) y escribe
+static/img/city-{cer,sc,se,vd}-{day,night}.webp a 600x200. Solo hace falta volver a lanzarlo si cambian los banners.
 Uso (Pillow solo está en `py`):  py tools/make_city_thumbs.py
 """
 from pathlib import Path
@@ -10,7 +11,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parent.parent
 CITIES = {"cer": ROOT.parent / "cerdanyola-local", "sc": ROOT.parent / "santcugat-local",
-          "se": ROOT.parent / "santesteve-local"}
+          "se": ROOT.parent / "santesteve-local", "vd": ROOT.parent / "vilassar-local"}
 SIZE = (600, 200)
 
 

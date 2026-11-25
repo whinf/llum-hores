@@ -6,7 +6,8 @@
  "locals": [
   {"id": "cer", "name": "Cerdanyola Avui", "url": "https://cerdanyola.horaverda.es"},
   {"id": "sc", "name": "Sant Cugat Avui", "url": "https://santcugat.horaverda.es"},
-  {"id": "se", "name": "Sant Esteve Avui", "url": "https://santesteve.horaverda.es"}
+  {"id": "se", "name": "Sant Esteve Avui", "url": "https://santesteve.horaverda.es"},
+  {"id": "vd", "name": "Vilassar de Dalt Avui", "url": "https://vilassar.horaverda.es"}
  ],
  "studio_url": "https://onestudioman.horaverda.es",
  "visits_url": "https://cerdanyola-board.chatcerdanyola.workers.dev/hit?site=hv",
